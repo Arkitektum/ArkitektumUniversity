@@ -36,7 +36,9 @@ namespace Ckvass_FactoryPattern
         NokoHeiltNyttMeIkkjeEinGongHarTenktPaa
     }
 
-
+    /// <summary>
+    /// Responsible for making the decision of which implementation to use.
+    /// </summary>
     public static class MyFactory
     {
         public static IHowToPassStuffThroughFTB Build(HowDoWeSendThis howDoWeSendThis)
@@ -59,16 +61,22 @@ namespace Ckvass_FactoryPattern
         }
     }
 
-
-
-
-
-
-
     public interface IHowToPassStuffThroughFTB
     {
         string MyOwnSelf();
     }
+
+
+/***
+*     _____                _                           _        _   _                 
+*    |_   _|              | |                         | |      | | (_)                
+*      | | _ __ ___  _ __ | | ___ _ __ ___   ___ _ __ | |_ __ _| |_ _  ___  _ __  ___ 
+*      | || '_ ` _ \| '_ \| |/ _ \ '_ ` _ \ / _ \ '_ \| __/ _` | __| |/ _ \| '_ \/ __|
+*     _| || | | | | | |_) | |  __/ | | | | |  __/ | | | || (_| | |_| | (_) | | | \__ \
+*     \___/_| |_| |_| .__/|_|\___|_| |_| |_|\___|_| |_|\__\__,_|\__|_|\___/|_| |_|___/
+*                   | |                                                               
+*                   |_|                                                               
+*/
 
     public class SendToAKommune : IHowToPassStuffThroughFTB
     {
@@ -84,7 +92,6 @@ namespace Ckvass_FactoryPattern
         {
             return this.GetType().Name;
         }
-
     }
 
     public class SendForDistributionToAListOfFinePeople : IHowToPassStuffThroughFTB
@@ -102,7 +109,4 @@ namespace Ckvass_FactoryPattern
             return this.GetType().Name;
         }
     }
-
-
- 
 }
