@@ -1,3 +1,3 @@
 # ArkitektumUniversity
-Code snippet for better mousetrap building people
-C# Factory Pattern
+Code snippets for better mousetrap building people
+1. C# Factory Pattern
