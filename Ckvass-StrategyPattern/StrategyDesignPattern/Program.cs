@@ -10,12 +10,21 @@ namespace StrategyDesignPattern
 
 
             // Randomly get one of the enum values
-            var incomingAltinnData = (SupportedProcessingPathForAltinnForms) new Random().Next(Enum.GetNames(typeof(SupportedProcessingPathForAltinnForms)).Length);
+            var incomingAltinnData = (SupportedProcessingPathForAltinnForms)new Random().Next(Enum.GetNames(typeof(SupportedProcessingPathForAltinnForms)).Length);
             Console.WriteLine($"We are processing an Altinn request of type {incomingAltinnData}");
 
             // Select processing strategy
-            IProcessAltinnDownloadQueueItemStrategy processStrategy;
+            var processingStrategy = GetProcessingStrategy(incomingAltinnData);
+            var formDataProcessor = new FormDataProcessor(processingStrategy);
 
+            // Run the strategy
+            formDataProcessor.ProcessFormData();
+        }
+
+        // STRATEGY "factory"
+        private static IProcessAltinnDownloadQueueItemStrategy GetProcessingStrategy(SupportedProcessingPathForAltinnForms incomingAltinnData)
+        {
+            IProcessAltinnDownloadQueueItemStrategy processStrategy;
             switch (incomingAltinnData)
             {
                 case SupportedProcessingPathForAltinnForms.Ship:
@@ -25,7 +34,7 @@ namespace StrategyDesignPattern
                 case SupportedProcessingPathForAltinnForms.Distribute:
                     processStrategy = new ProcessDistribution();
                     break;
-                
+
                 case SupportedProcessingPathForAltinnForms.Notification:
                     processStrategy = new ProcessSendToApplicant();
                     break;
@@ -33,8 +42,7 @@ namespace StrategyDesignPattern
                     throw new ArgumentOutOfRangeException();
             }
 
-            // Run the strategy
-            processStrategy.ProcessData();
+            return processStrategy;
         }
     }
 
@@ -46,15 +54,11 @@ namespace StrategyDesignPattern
         Notification // Send data back to the requester 
     };
 
-
-
-
     // INTERFACE
     internal interface IProcessAltinnDownloadQueueItemStrategy
     {
         void ProcessData();
     }
-
 
     // STRATEGY 1
     internal class ProcessDistribution : IProcessAltinnDownloadQueueItemStrategy
@@ -83,5 +87,34 @@ namespace StrategyDesignPattern
         {
             Console.WriteLine("The Altinn Archive Reference is being sent to Ansvarlig Sokers inbox in Altinn");
         }
+    }
+
+    // 
+    internal class FormDataProcessor
+    {
+        private readonly IProcessAltinnDownloadQueueItemStrategy _prosessingStrategy;
+
+        public FormDataProcessor(IProcessAltinnDownloadQueueItemStrategy prosessingStrategy)
+        {
+            _prosessingStrategy = prosessingStrategy;
+        }
+
+        public void ProcessFormData()
+        {
+            DoSomeDefaultStuffFirst();
+            _prosessingStrategy.ProcessData();
+            DoSomeDefaultStuffAtTheEnd();
+        }
+
+        private void DoSomeDefaultStuffFirst()
+        {
+            Console.WriteLine("*** Does some default processing stuff first.. ***");
+        }
+
+        private void DoSomeDefaultStuffAtTheEnd()
+        {
+            Console.WriteLine("*** And then the processor does some other stuff at the end of the form processing.. ***");
+        }
+
     }
 }
