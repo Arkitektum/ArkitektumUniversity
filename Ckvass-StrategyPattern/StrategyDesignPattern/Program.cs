@@ -8,21 +8,19 @@ namespace StrategyDesignPattern
         {
             Console.WriteLine("Hello Strategy!");
 
-
             // Randomly get one of the enum values
             var incomingAltinnData = (SupportedProcessingPathForAltinnForms)new Random().Next(Enum.GetNames(typeof(SupportedProcessingPathForAltinnForms)).Length);
             Console.WriteLine($"We are processing an Altinn request of type {incomingAltinnData}");
 
-            // Select processing strategy
-            var processingStrategy = GetProcessingStrategy(incomingAltinnData);
-            var formDataProcessor = new FormDataProcessor(processingStrategy);
+            // Call "form strategy factory" to get desired form-processor
+            var formDataProcessor = GetFormDataProcessor(incomingAltinnData);
 
-            // Run the strategy
+            // Process the form data
             formDataProcessor.ProcessFormData();
         }
 
-        // STRATEGY "factory"
-        private static IProcessAltinnDownloadQueueItemStrategy GetProcessingStrategy(SupportedProcessingPathForAltinnForms incomingAltinnData)
+        // Form processor strategy "factory"
+        private static FormDataProcessor GetFormDataProcessor(SupportedProcessingPathForAltinnForms incomingAltinnData)
         {
             IProcessAltinnDownloadQueueItemStrategy processStrategy;
             switch (incomingAltinnData)
@@ -42,7 +40,7 @@ namespace StrategyDesignPattern
                     throw new ArgumentOutOfRangeException();
             }
 
-            return processStrategy;
+            return new FormDataProcessor(processStrategy);
         }
     }
 
